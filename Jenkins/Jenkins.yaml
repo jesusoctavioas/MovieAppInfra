@@ -1,0 +1,42 @@
+---
+jenkins:
+  systemMessage: Jenkins as Code 
+
+unclassified:
+  shell:
+    shell: /bin/bash
+
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          id: DockerCreds
+          username: dockerhub_username
+          password: dockerhub_password
+          description: Credentials for Docker Hub
+          scope: GLOBAL
+      - usernamePassword:
+          id: GitCreds
+          username: github_username
+          password: github_password
+          description: Credentials for Git Hub
+          scope: GLOBAL
+      - basicSSHUserPrivateKey:
+          scope: GLOBAL
+          id: DevServer
+          username: vagrant
+          description: Private Key for SSH Agent
+          privateKeySource:
+            directEntry:
+              privateKey: "readFile:${/var/lib/jenkins/.ssh/private_key}"
+
+tool:
+  git:
+    installations:
+      - name: Default
+        home: /usr/bin/git
+  dockerTool:
+    installations:
+      - name: Default
+        home: /usr/bin/

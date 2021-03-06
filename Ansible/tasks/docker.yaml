@@ -1,0 +1,22 @@
+---
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+    force_apt_get: yes
+  notify:
+    - Restart Docker
+    - Enable Docker
+
+- name: Add remote user to Docker group
+  user:
+    name: '{{ user }}'
+    groups: 
+      - docker
+    append: yes
+
+- user: name={{ansible_user}} groups=docker
+- name: Affect User New Group
+  meta: reset_connection
+

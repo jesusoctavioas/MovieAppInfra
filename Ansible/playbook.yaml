@@ -1,0 +1,39 @@
+---
+- name: Setup System
+  hosts: all
+  become: yes
+  tasks:
+    - include: tasks/system.yaml
+
+- name: Setup Docker
+  hosts: all
+  become: yes
+  tasks:
+    - include: tasks/docker.yaml
+  handlers:
+    - include: handlers/docker.yaml
+
+- name: Setup Docker-Compose
+  hosts: all
+  become: yes
+  tasks:
+    - include: tasks/dockercompose.yaml
+
+- name: Register Dev Server Private Key
+  hosts: dev
+  tasks:
+    - name: Share Public Key
+      shell: cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+    - name: Register Private Key
+      shell: cat ~/.ssh/id_rsa
+      register: private_key
+
+- name: Setup Jenkins
+  hosts: manager
+  become: yes
+  vars:
+    private_key: "{{ hostvars[dev].private_key.stdout }}"
+  tasks:
+    - include: tasks/jenkins.yaml
+  handlers:
+    - include: handlers/jenkins.yaml

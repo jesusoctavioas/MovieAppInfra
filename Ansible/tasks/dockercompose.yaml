@@ -1,0 +1,31 @@
+---
+- name: Check if Docker Compose is Installed
+  stat:
+    path: /usr/bin/docker-compose
+  register: dockercompose
+
+- name: Register System
+  shell: uname -s
+  register: sys
+  when: not dockercompose.stat.exists
+
+- name: Register Architecture
+  shell: uname -m
+  register: arch
+  when: not dockercompose.stat.exists
+
+- name: Install Docker-Compose
+  get_url: 
+    url: 'https://github.com/docker/compose/releases/download/1.28.2/docker-compose-{{ sys.stdout }}-{{ arch.stdout }}'
+    dest: /usr/local/bin/docker-compose
+    group: docker
+    mode: 'u+x,g+x'
+  when: not dockercompose.stat.exists
+
+- name: Symlinking Docker-Compose
+  file:
+    src: /usr/local/bin/docker-compose
+    dest: /usr/bin/docker-compose
+    group: docker
+    state: link
+  when: not dockercompose.stat.exists
