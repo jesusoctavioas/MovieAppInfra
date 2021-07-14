@@ -1,5 +1,6 @@
 [all:vars]
 user=vagrant
+manager=192.168.33.10
 dev=192.168.33.11
 
 [manager]

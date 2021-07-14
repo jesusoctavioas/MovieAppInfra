@@ -1,0 +1,13 @@
+[Unit]
+Description=Grafana
+After=network-online.target
+
+[Service]
+User=root
+Restart=on-failure
+
+ExecStartPre=/usr/bin/docker rm -f grafana
+ExecStart=/usr/bin/docker run -d --name grafana -v grafana:/var/lib/grafana -p 3000:3000 grafana/grafana
+
+[Install]
+WantedBy=multi-user.target

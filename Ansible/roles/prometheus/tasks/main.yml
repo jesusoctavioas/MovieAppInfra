@@ -1,0 +1,55 @@
+---
+# tasks file for roles/prometheus
+- name: Ensure Prometheus directory exists
+  become: yes
+  file:
+    path: /etc/prometheus
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Ensure Prometheus directory exists
+  become: yes
+  file:
+    path: /opt/prometheus
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Check if Prometheus is installed
+  stat:
+    path: /opt/prometheus/prometheus
+  register: prometheus
+
+- name: Download Prometheus if not installed
+  become: yes
+  unarchive:
+    src: https://github.com/prometheus/prometheus/releases/download/v2.27.1/prometheus-2.27.1.linux-amd64.tar.gz
+    dest: /opt/prometheus
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+  when: not prometheus.stat.exists
+
+- name: Create Prometheus Service
+  become: yes
+  copy:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Restart Prometheus
+
+- name: Prometheus Config
+  become: yes
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Restart Prometheus

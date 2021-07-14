@@ -1,0 +1,12 @@
+---
+# tasks file for roles/grafana
+- name: Grafana Service
+  become: yes
+  copy:
+    src: grafana.service
+    dest: /etc/systemd/system/grafana.service
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Restart Grafana

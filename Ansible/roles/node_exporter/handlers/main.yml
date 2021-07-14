@@ -1,0 +1,9 @@
+---
+# handlers file for roles/node_exporter
+- name: Restart NodeExporter
+  become: yes
+  systemd: 
+    daemon-reload: yes
+    name: node_exporter
+    state: restarted
+    enabled: yes

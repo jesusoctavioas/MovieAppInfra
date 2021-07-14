@@ -1,0 +1,13 @@
+[Unit]
+Description=Prometheus
+After=network-online.target
+
+[Service]
+User=root
+Restart=on-failure
+
+WorkingDirectory=/opt/prometheus
+ExecStart=/opt/prometheus/prometheus --config.file=/etc/prometheus/prometheus.yml
+
+[Install]
+WantedBy=multi-user.target

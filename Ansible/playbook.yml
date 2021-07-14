@@ -1,0 +1,19 @@
+---
+# Ansible playbook for MovieApp Infrastructure
+- hosts: all
+  roles:
+    - role: roles/system
+      tags: system
+    - role: roles/docker
+      tags: docker
+    - role: roles/node_exporter
+      tags: node_exporter
+
+- hosts: manager
+  roles:
+    - role: roles/jenkins
+      tags: jenkins
+    - role: roles/prometheus
+      tags: prometheus
+    - role: roles/grafana
+      tags: grafana

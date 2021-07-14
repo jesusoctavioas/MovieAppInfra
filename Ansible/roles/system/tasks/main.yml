@@ -1,0 +1,31 @@
+---
+# tasks file for roles/system
+- name: Clean System
+  become: yes
+  apt:
+    autoremove: yes
+    force_apt_get: yes
+
+- name: Upgrade System
+  become: yes
+  apt:
+    upgrade: 'yes'
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Install Required Packages
+  become: yes
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+      - python3
+      - python3-pip
+      - unzip
+      - git
+    state: present
+    update_cache: yes
+    force_apt_get: yes

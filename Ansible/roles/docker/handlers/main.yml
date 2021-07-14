@@ -1,10 +1,13 @@
 ---
+# handlers file for roles/docker
 - name: Restart Docker
+  become: yes
   service:
     name: docker
     state: restarted
 
 - name: Enable Docker
+  become: yes
   service:
     name: docker
     enabled: yes

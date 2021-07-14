@@ -1,10 +1,13 @@
 ---
+# handlers file for roles/jenkins
 - name: Restart Jenkins
+  become: yes
   service:
     name: jenkins
     state: restarted
 
 - name: Enable Jenkins
+  become: yes
   service:
     name: jenkins
     enabled: yes

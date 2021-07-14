@@ -1,0 +1,35 @@
+---
+# tasks file for roles/node_exporter
+- name: Ensure Node Exporter directory exists
+  become: yes
+  file:
+    path: /opt/node_exporter
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Check if Node Exporter Is Installed
+  stat:
+    path: /opt/node_exporter/node_exporter
+  register: exporter
+
+- name: Download Node Exporter
+  become: yes
+  unarchive:
+    src: https://github.com/prometheus/node_exporter/releases/download/v1.1.2/node_exporter-1.1.2.linux-amd64.tar.gz
+    dest: /opt/node_exporter
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+  when: not exporter.stat.exists
+
+- name: Create Node Exporter Service
+  become: yes
+  copy:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: "0755"
+  notify:
+    - Restart NodeExporter

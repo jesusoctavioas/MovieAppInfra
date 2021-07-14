@@ -1,0 +1,13 @@
+[Unit]
+Description=Node Exporter
+After=network-online.target
+
+[Service]
+User=root
+Restart=on-failure
+
+WorkingDirectory=/opt/node_exporter
+ExecStart=/opt/node_exporter/node_exporter
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+---
+# tasks file for roles/docker
+- name: Install Docker
+  become: yes
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+    force_apt_get: yes
+  notify:
+    - Restart Docker
+    - Enable Docker
+
+- name: Add User To Docker Group
+  become: yes
+  user:
+    name: "{{ user }}"
+    groups: docker
+    append: yes
+
+- name: Install Docker Compose
+  become: yes
+  pip:
+    name: docker-compose
